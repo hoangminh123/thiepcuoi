@@ -24,7 +24,8 @@ body { align-items:flex-start; }
 .date-strip .big-date { display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:76px; line-height:1; letter-spacing:-3px; height:84px; margin:0; padding:0; transform:none; position:relative; top:-8px; }
 .date-strip .year-box { font-size:28px; line-height:1; font-weight:400; }
 .lunar-date { font-family:'Cormorant Garamond',serif; font-size:20px; margin-top:14px; margin-bottom:22px; }
-.quote-title,.quote-sub,.role-name,.person-name,.guest-title,.arch-title,.album-title { font-family:'Alex Brush','Great Vibes',cursive; }
+.quote-title,.quote-sub,.role-name,.person-name,.arch-title,.album-title { font-family:'Alex Brush','Great Vibes',cursive; }
+.guest-title { font-family:'Montserrat',sans-serif !important; font-size:30px !important; font-weight:500; letter-spacing:.3px; line-height:1.35; overflow-wrap:anywhere; }
 .quote-title { font-size:32px; } .quote-sub { font-size:30px; }
 .event-time-box { display:flex; align-items:center !important; gap:20px; min-height:90px; }
 .event-time-box .time-left,.event-time-box .time-right,.event-time-box .time-center,.event-time-box .divider { align-self:center; }
@@ -59,7 +60,7 @@ body { align-items:flex-start; }
 .map-iframe-box img { width:100%; height:100%; object-fit:cover; }
 @media(max-width:520px) {
  .venue-heading { gap:8px; } .venue-pin { width:36px; height:48px; flex-basis:36px; }
- .venue-name { font-size:20px; } .arch-container { padding:38px 18px 24px !important; }
+ .venue-name { font-size:18px; line-height:1.25; } .arch-container { padding:38px 18px 24px !important; }
  .map-iframe-box { height:170px !important; } .date-strip .big-date { height:64px; }
  .event-time-box .time-center { height:66px; min-height:66px; }
  .main-photo-container { width:82% !important; }
@@ -519,8 +520,8 @@ body { align-items:flex-start; }
         }
     
 .card-wrapper { isolation:isolate; }
-.section:first-of-type { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:top center; }
-.section:nth-of-type(2) { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:center 35%; }
+.section:has(.main-photo-container) { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:top center; }
+.section:has(.quote-title) { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:center 35%; }
 .bg-flower-bottom-left { display:none; }
 
 /* ===== HIEU UNG CHU VA HINH KHI CUON DEN ===== */
@@ -586,10 +587,37 @@ body { align-items:flex-start; }
 
 
 </style>
+
+<style>
+/* Form nhập tên khách chỉ hiện khi URL có guest=change */
+.guest-builder { display:none; position:relative; flex:none; width:calc(100% - 32px); max-width:560px; margin:18px auto 22px; padding:16px; box-sizing:border-box; background:#fff8fa; border:1px solid #ead0d8; border-radius:12px; font-family:Montserrat, sans-serif; text-align:left; }
+.guest-builder.is-visible { display:block !important; order:-1; }
+.card-wrapper { display:block !important; margin-left:auto; margin-right:auto; }
+.guest-builder, .guest-builder * { box-sizing:border-box; }
+.guest-builder label { display:block; margin-bottom:8px; font-size:14px; font-weight:600; color:#4b3a3d; }
+.guest-builder .guest-builder-row { display:flex; gap:8px; }
+.guest-builder input { flex:1; min-width:0; padding:11px 12px; border:1px solid #d9b9c3; border-radius:8px; font:inherit; font-size:16px; }
+.guest-builder button { padding:11px 16px; border:0; border-radius:8px; background:#8c3d46; color:white; font:inherit; font-weight:600; cursor:pointer; }
+.guest-builder .guest-builder-hint { margin-top:8px; color:#76666a; font-size:12px; line-height:1.5; }
+.timeline-item > div > div:last-child { display:block !important; visibility:visible !important; opacity:1 !important; height:auto !important; overflow:visible !important; font-size:13px !important; line-height:1.5 !important; color:#555 !important; }
+.timeline-item { align-items:center; }
+.timeline-box { display:flex; }
+@media(max-width:420px) { .guest-builder .guest-builder-row { flex-direction:column; } .guest-builder button { width:100%; } }
+</style>
+
 </head>
 <body>
-
-    <div class="card-wrapper">
+<div class="card-wrapper">
+    <div id="guest-builder" class="guest-builder" aria-label="Tạo thiệp mời cá nhân">
+  <form id="guest-builder-form">
+    <label for="guest-builder-name">Tạo thiệp mời riêng</label>
+    <div class="guest-builder-row">
+      <input id="guest-builder-name" name="guest" type="text" maxlength="100" autocomplete="name" placeholder="Nhập tên khách mời, ví dụ: Anh A" required>
+      <button type="submit">Tạo thiệp</button>
+    </div>
+    <div class="guest-builder-hint">Nhập tên khách rồi nhấn “Tạo thiệp”. Trang sẽ tải lại với tên khách đã điền sẵn.</div>
+  </form>
+</div>
         <!-- HOA VĂN HOẠ TIẾT -->
 
         <!-- PHẦN 1: HEADER -->
@@ -685,7 +713,7 @@ body { align-items:flex-start; }
             <!-- ARCH HỒNG CONTAINER -->
             <div class="arch-container reveal reveal-up">
                 <div class="font-script arch-title">Địa điểm tổ chức</div>
-                <div class="venue-heading reveal reveal-up" style="--reveal-delay: .12s"><svg class="venue-pin" viewBox="0 0 64 80" aria-hidden="true"><path d="M32 3C16 3 5 15 5 30c0 20 27 46 27 46s27-26 27-46C59 15 48 3 32 3z" fill="#fff"/><circle cx="32" cy="29" r="9" fill="#ead0d8"/><path d="M9 62c-8 3-7 9 1 12 12 5 32 5 44 0 8-3 9-9 1-12" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg><div class="venue-name">CÁT TƯỜNG GARDEN</div></div>
+                <div class="venue-heading reveal reveal-up" style="--reveal-delay: .12s"><svg class="venue-pin" viewBox="0 0 64 80" aria-hidden="true"><path d="M32 3C16 3 5 15 5 30c0 20 27 46 27 46s27-26 27-46C59 15 48 3 32 3z" fill="#fff"/><circle cx="32" cy="29" r="9" fill="#ead0d8"/><path d="M9 62c-8 3-7 9 1 12 12 5 32 5 44 0 8-3 9-9 1-12" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg><div class="venue-name">NHÀ HÀNG TIỆC CƯỚI<br> CÁT TƯỜNG GARDEN</div></div>
                 <div class="venue-sub reveal reveal-up" style="--reveal-delay: .2s">- SẢNH LẦU 2 -</div>
                 <div class="venue-address reveal reveal-up" style="--reveal-delay: .28s">715 Phạm Văn Thuận, Tam Hiệp, Đồng Nai</div>
 
@@ -775,6 +803,126 @@ document.addEventListener("DOMContentLoaded", function () {
 
     items.forEach(function (item) { observer.observe(item); });
 });
+</script>
+
+
+<script>
+/* Chế độ thiệp theo tham số URL: ?wedding=nhatrai hoặc ?wedding=nhagai */
+(function () {
+    const params = new URLSearchParams(window.location.search);
+    const mode = (params.get('wedding') || 'nhatrai').toLowerCase();
+    const isBrideSide = mode === 'nhagai';
+    // URLSearchParams tự giải mã dấu + thành khoảng trắng, ví dụ guest=Anh+A -> Anh A.
+    const guestParam = (params.get('guest') || '').trim();
+    const isGuestBuilder = guestParam.toLowerCase() === 'change';
+    const guestName = (!guestParam || isGuestBuilder) ? 'Quý khách' : guestParam;
+
+    // Chỉ hiện ô nhập tên khi URL có guest=change. Khi gửi form, giữ wedding và thay guest bằng tên đã nhập.
+    if (isGuestBuilder) {
+        const builder = document.getElementById('guest-builder');
+        const input = document.getElementById('guest-builder-name');
+        const form = document.getElementById('guest-builder-form');
+        if (builder) builder.classList.add('is-visible');
+        if (form && input) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const name = input.value.trim();
+                if (!name) { input.focus(); return; }
+                const next = new URLSearchParams(window.location.search);
+                if (!next.has('wedding')) next.set('wedding', 'nhatrai');
+                next.set('guest', name);
+                window.location.href = window.location.pathname + '?' + next.toString() + window.location.hash;
+            });
+        }
+    }
+
+    // Không thay đổi thiệp mặc định khi không truyền tham số hoặc giá trị không hợp lệ.
+    if (!isBrideSide && mode !== 'nhatrai') return;
+
+    const config = isBrideSide ? {
+        date: '28.11', day: '28', weekday: 'Thứ Bảy', month: 'Tháng 11', year: 'Năm 2026',
+        lunar: '(Nhằm Ngày 20 Tháng 10 Năm Bính Ngọ)',
+        title: 'LỄ VU QUY', partyTitle: 'TIỆC MỪNG LỄ VU QUY', venueFloor: '- SẢNH LẦU 1 -',
+        home: 'TƯ GIA NHÀ GÁI', names: 'THÙY DƯƠNG & HOÀNG MINH',
+        times: [{ time: '08h00', label: 'Thứ Bảy' }, { time: '17h00', label: 'Thứ Bảy' }],
+        timeline: [{ time: '17h00', label: 'Đón khách' }, { time: '18h00', label: 'Khai tiệc' }]
+    } : {
+        date: '29.11', day: '29', weekday: 'Chủ nhật', month: 'Tháng 11', year: 'Năm 2026',
+        lunar: '(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)',
+        title: 'LỄ THÀNH HÔN', partyTitle: 'TIỆC MỪNG LỄ THÀNH HÔN', venueFloor: '- SẢNH LẦU 2 -',
+        home: 'TƯ GIA NHÀ TRAI', names: 'HOÀNG MINH & THÙY DƯƠNG',
+        times: [{ time: '08h00', label: 'Chủ Nhật' }, { time: '11h00', label: 'Chủ Nhật' }],
+        timeline: [{ time: '11h00', label: 'Đón khách' }, { time: '12h00', label: 'Khai Tiệc' }]
+    };
+
+    function setText(selector, value) {
+        document.querySelectorAll(selector).forEach(el => { el.textContent = value; });
+    }
+
+    document.querySelectorAll('.couple-names').forEach(el => { el.textContent = config.names; });
+    document.querySelectorAll('.guest-title').forEach(el => { el.textContent = guestName; });
+    document.querySelectorAll('.date-strip .day-name').forEach(el => { el.textContent = config.weekday; });
+    document.querySelectorAll('.date-strip .big-date').forEach(el => { el.textContent = config.date; });
+    document.querySelectorAll('.date-strip .year-box').forEach(el => { el.innerHTML = '20<br>26'; });
+    document.querySelectorAll('.lunar-date').forEach(el => { el.textContent = config.lunar; });
+
+    document.querySelectorAll('.event-time-box .time-left').forEach((el, index) => {
+        const item = config.times[index];
+        if (!item) return;
+        el.innerHTML = '<b>' + item.time + '</b><br>' + item.label;
+    });
+    document.querySelectorAll('.event-time-box .time-center').forEach(el => { el.textContent = config.day; });
+    document.querySelectorAll('.event-time-box .time-right').forEach(el => { el.innerHTML = config.month + '<br>' + config.year; });
+
+    // Cập nhật giờ đón khách và khai tiệc ở timeline bên dưới lịch.
+    document.querySelectorAll('.timeline-item').forEach((el, index) => {
+        const item = config.timeline[index];
+        if (!item) return;
+        // Markup: icon SVG, then a wrapper containing time and label.
+        const textWrap = el.children[1];
+        if (!textWrap) return;
+        const lines = textWrap.children;
+        if (lines[0]) lines[0].textContent = item.time;
+        if (lines[1]) lines[1].textContent = item.label;
+        // Ensure the labels remain visible and readable on both desktop and mobile.
+        if (lines[1]) {
+            lines[1].style.display = 'block';
+            lines[1].style.visibility = 'visible';
+            lines[1].style.fontSize = '13px';
+            lines[1].style.color = '#555';
+            lines[1].style.lineHeight = '1.5';
+        }
+    });
+
+    document.querySelectorAll('.event-type').forEach(el => {
+        const t = el.textContent.trim();
+        if (t.includes('TIỆC MỪNG')) el.textContent = config.partyTitle;
+        else el.textContent = config.title;
+    });
+    setText('.venue-sub', config.venueFloor);
+    // Chỉ đổi dòng tư gia, không tác động địa chỉ nhà hàng.
+    document.querySelectorAll('.location-title').forEach(el => {
+        const next = el.nextElementSibling;
+        if (next && /TƯ GIA NHÀ (TRAI|GÁI)/i.test(next.textContent.trim())) next.textContent = config.home;
+    });
+
+    // Đổi thứ tự hai khối gia đình: nhà gái trước nhà trai khi wedding=nhagai.
+    const familyBlocks = document.querySelectorAll('.family-block');
+    if (familyBlocks.length >= 2) {
+        const first = familyBlocks[0], second = familyBlocks[1];
+        const parent = first.parentNode;
+        if (isBrideSide) parent.insertBefore(second, first);
+        else parent.insertBefore(first, second);
+    }
+
+    // Lịch tháng 11: tô ngày tương ứng.
+    document.querySelectorAll('.calendar-card').forEach(card => {
+        card.querySelectorAll('.day-number').forEach(el => {
+            el.classList.remove('active');
+            if (el.textContent.trim() === config.day) el.classList.add('active');
+        });
+    });
+})();
 </script>
 
 </body>
