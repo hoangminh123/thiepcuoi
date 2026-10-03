@@ -545,6 +545,24 @@ body { align-items:flex-start; }
     }
 }
 
+/* Giữ tên cô dâu chú rể trên cùng một dòng */
+.couple-names {
+    white-space: nowrap !important;
+    font-size: clamp(15px, 4.2vw, 27px) !important;
+    letter-spacing: 0 !important;
+}
+
+/* Trên điện thoại, thu nhỏ khoảng cách hai bên */
+@media (max-width: 480px) {
+    .section {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .couple-names {
+        font-size: clamp(13px, 3.8vw, 18px) !important;
+    }
+}
 </style>
 </head>
 <body>
