@@ -824,14 +824,48 @@ document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById('guest-builder-form');
         if (builder) builder.classList.add('is-visible');
         if (form && input) {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', async function (event) {
                 event.preventDefault();
                 const name = input.value.trim();
                 if (!name) { input.focus(); return; }
+
                 const next = new URLSearchParams(window.location.search);
                 if (!next.has('wedding')) next.set('wedding', 'nhatrai');
                 next.set('guest', name);
-                window.location.href = window.location.pathname + '?' + next.toString() + window.location.hash;
+
+                // Tạo URL đầy đủ của thiệp cá nhân hóa.
+                const invitationUrl = new URL(window.location.pathname + '?' + next.toString() + window.location.hash, window.location.origin).href;
+
+                // Sao chép URL trước khi điều hướng vì sau khi reload clipboard có thể bị chặn.
+                let copied = false;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(invitationUrl);
+                        copied = true;
+                    }
+                } catch (err) {
+                    console.warn('Clipboard API không khả dụng, thử phương án dự phòng.', err);
+                }
+
+                if (!copied) {
+                    try {
+                        const temp = document.createElement('textarea');
+                        temp.value = invitationUrl;
+                        temp.setAttribute('readonly', '');
+                        temp.style.position = 'fixed';
+                        temp.style.opacity = '0';
+                        document.body.appendChild(temp);
+                        temp.select();
+                        copied = document.execCommand('copy');
+                        temp.remove();
+                    } catch (err) {
+                        console.warn('Không thể tự động sao chép URL.', err);
+                    }
+                }
+
+                // Lưu URL tạm để có thể báo trạng thái sau khi trang tải lại.
+                try { sessionStorage.setItem('wedding_invitation_link_copied', copied ? '1' : '0'); } catch (err) {}
+                window.location.href = invitationUrl;
             });
         }
     }
