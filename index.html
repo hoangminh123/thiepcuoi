@@ -26,7 +26,7 @@ body { align-items:flex-start; }
 .lunar-date { font-family:'Cormorant Garamond',serif; font-size:20px; margin-top:14px; margin-bottom:22px; }
 .quote-title,.quote-sub,.role-name,.person-name,.arch-title,.album-title { font-family:'Alex Brush','Great Vibes',cursive; }
 .guest-title { font-family:'Montserrat',sans-serif !important; font-size:30px !important; font-weight:500; letter-spacing:.3px; line-height:1.35; overflow-wrap:anywhere; }
-.quote-title { font-size:32px; } .quote-sub { font-size:30px; }
+.quote-title { font-size:32px; } .quote-sub { font-size:32px; }
 .event-time-box { display:flex; align-items:center !important; gap:20px; min-height:90px; }
 .event-time-box .time-left,.event-time-box .time-right,.event-time-box .time-center,.event-time-box .divider { align-self:center; }
 .event-time-box .time-center { display:flex; align-items:center; justify-content:center; font-size:62px; line-height:1; min-width:78px; height:84px; min-height:84px; margin:0; padding:0; transform:none; position:relative; top:-9px; }
@@ -64,6 +64,65 @@ body { align-items:flex-start; }
  .map-iframe-box { height:170px !important; } .date-strip .big-date { height:64px; }
  .event-time-box .time-center { height:66px; min-height:66px; }
  .main-photo-container { width:82% !important; }
+}
+
+
+
+/* ===== TRANG BIA MO DAU THIEP ===== */
+.wedding-cover {
+    width: 100%;
+    max-width: 660px;
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0 auto;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    background-color: #fff8f7;
+    background-image: url("images/1stpage.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.wedding-cover .cover-logo {
+    display: block;
+    width: min(58%, 260px);
+    max-height: 36vh;
+    object-fit: contain;
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    animation: coverLogoSlideIn 1.1s ease-out 0.15s forwards;
+}
+
+@keyframes coverLogoSlideIn {
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (max-width: 480px) {
+    .wedding-cover {
+        padding: 18px;
+        background-position: center center;
+    }
+    .wedding-cover .cover-logo {
+        width: 58%;
+        max-height: 32vh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wedding-cover .cover-logo {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
 }
 
 </style>
@@ -205,12 +264,12 @@ body { align-items:flex-start; }
         /* PHẦN 2: THÔNG TIN GIA ĐÌNH */
         .quote-title {
             font-size: 26px;
-            color: #222;
-            margin-bottom: 4px;
+            color: #8c3d46;
+            margin-bottom: -4px;
         }
         .quote-sub {
-            font-size: 22px;
-            color: #333;
+            font-size: 26px;
+            color: #8c3d46;
             margin-bottom: 30px;
         }
 
@@ -243,6 +302,14 @@ body { align-items:flex-start; }
         .family-info {
             padding: 0 20px;
             flex-grow: 1;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .family-info.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .family-title {
@@ -262,20 +329,20 @@ body { align-items:flex-start; }
         .role-name {
             font-size: 22px;
             margin-top: 10px;
-            color: #222;
+            color: #8c3d46;
         }
 
         .person-name {
             font-size: 32px;
-            color: #111;
+            color: #8c3d46;
             line-height: 1;
         }
 
         /* PHẦN 3: LỄ THÀNH HÔN */
         .invitation-header {
-            border-top: 1px solid #ddd;
-            padding-top: 25px;
-            margin-top: 10px;
+            border-top: 0;
+            padding-top: 0;
+            margin-top: 0;
         }
 
         .invitation-title {
@@ -438,7 +505,7 @@ body { align-items:flex-start; }
         }
 
         .calendar-grid .day-head {
-            font-weight: 700;
+            font-weight: 900;
             color: #666;
             padding-bottom: 5px;
         }
@@ -446,11 +513,12 @@ body { align-items:flex-start; }
         .calendar-grid .day-number {
             padding: 5px 0;
             position: relative;
+            font-weight: 500;
         }
 
         .calendar-grid .day-number.active {
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 900;
         }
 
         .calendar-grid .day-number.active::before {
@@ -460,47 +528,48 @@ body { align-items:flex-start; }
             left: 50%;
             transform: translate(-50%, -50%);
             color: transparent;
-            font-size: 26px;
+            font-size: 30px;
             z-index: -1;
         }
 
         /* PHẦN 6: ALBUM ÁNH CƯỚI & LỜI CẢM ƠN */
         .album-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 30px 0 20px 0;
+            display: block;
+            height: 10px;
+            margin: 0;
         }
 
         .album-title {
             font-size: 30px;
             white-space: nowrap;
+            transform: translateY(200px);
         }
 
         .album-line {
             flex-grow: 1;
             height: 1px;
             background-color: #333;
+            transform: translateY(209px);
         }
 
         .photo-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 10px;
+            justify-items: center;
         }
 
         .photo-grid img {
             width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 2px;
+            height: auto;
+            object-fit: contain;
+            
         }
 
         .thank-you-section {
             border-top: 1px solid #eee;
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 10px;
+            padding-top: 5px;
         }
 
         .thank-you-text {
@@ -520,9 +589,70 @@ body { align-items:flex-start; }
         }
     
 .card-wrapper { isolation:isolate; }
-.section:has(.main-photo-container) { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:top center; }
-.section:has(.quote-title) { background-image:url("images/floral_bg.png"); background-size:100% auto; background-repeat:no-repeat; background-position:center 35%; }
-.bg-flower-bottom-left { display:none; }
+/* Nền riêng cho từng phần thiệp */
+.section:has(.main-photo-container) {
+    background-image: url("images/floral_bg.png");
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+/* Phần thông tin hai họ giữ nền hiện tại */
+.section:has(.quote-title) {
+    background-image: url("images/nen2ho.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+/* Phần ngày giờ: nền nenngay chỉ bao tới dòng âm lịch cuối cùng */
+.section.invitation-header {
+    background-image: url("images/nenchung.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+/* Khung nen ngay: full-bleed theo chieu ngang section, tu co chieu cao theo toan bo chu ben trong */
+.section.invitation-header {
+    padding-left: 28px;
+    padding-right: 28px;
+    box-sizing: border-box;
+}
+.event-date-background {
+    display: flow-root;
+    width: calc(100% + 56px);
+    margin: 0 -28px;
+    background-image: url("images/nenngay.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    padding: 24px 28px 30px;
+    box-sizing: border-box;
+}
+@media (max-width: 480px) {
+    .section.invitation-header {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .event-date-background {
+        width: calc(100% + 32px);
+        margin: 0 -16px;
+        padding: 22px 16px 28px;
+    }
+}
+/* Các phần còn lại dùng nền chung */
+.card-wrapper > .section:not(:has(.quote-title)):not(.invitation-header):not(:has(.album-header)) {
+    background-image: url("images/nenchung.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+/* Riêng phần album dùng nền album */
+.card-wrapper > .section:has(.album-header) {
+    background-image: url("images/nenalbum.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.bg-flower-bottom-left { display: none; }
 
 /* ===== HIEU UNG CHU VA HINH KHI CUON DEN ===== */
 .reveal {
@@ -585,6 +715,16 @@ body { align-items:flex-start; }
 }
     
 
+@keyframes familySlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 </style>
 
@@ -607,6 +747,7 @@ body { align-items:flex-start; }
 
 </head>
 <body>
+
 <div class="card-wrapper">
     <div id="guest-builder" class="guest-builder" aria-label="Tạo thiệp mời cá nhân">
   <form id="guest-builder-form">
@@ -618,26 +759,22 @@ body { align-items:flex-start; }
     <div class="guest-builder-hint">Nhập tên khách rồi nhấn “Tạo thiệp”. Trang sẽ tải lại với tên khách đã điền sẵn.</div>
   </form>
 </div>
+
+<!-- Trang bìa mở đầu: cuộn xuống để xem nội dung thiệp -->
+<section id="wedding-cover" class="wedding-cover" aria-label="Trang bìa thiệp cưới">
+    <div class="cover-content">
+      <img src="images/logo.png" alt="Logo Hoàng Minh và Thùy Dương" class="cover-logo">
+      <div class="cover-date font-serif"><span class="cover-weekday">Chủ nhật</span><span class="cover-date-divider"></span><strong class="cover-day">29.11</strong><span class="cover-date-divider"></span><span class="cover-year">20<br>26</span></div>
+    </div>
+</section>
+
+
         <!-- HOA VĂN HOẠ TIẾT -->
 
         <!-- PHẦN 1: HEADER -->
-        <div class="section">
-            <h1 class="font-script header-title reveal reveal-up">Save The Date</h1>
-            <div class="font-serif couple-names reveal reveal-up" style="--reveal-delay: .15s">HOÀNG MINH & THÙY DƯƠNG</div>
-            
-            <div class="main-photo-container reveal reveal-left" style="--reveal-delay: .25s">
-                <img src="images/main_wedding.jpg" alt="Hoàng Minh & Thùy Dương">
-            </div>
-
-            <div class="date-strip font-sans">
-                <span class="day-name">Chủ nhật</span>
-                <span class="divider-line"></span>
-                <span class="big-date">29.11</span>
-                <span class="divider-line"></span>
-                <span class="year-box">20<br>26</span>
-            </div>
-            <div class="lunar-date reveal reveal-up" style="--reveal-delay: .12s">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
-        </div>
+        <section id="wedding-main-page" class="wedding-main-page" aria-label="Trang ảnh cưới">
+            <img src="images/savename.png" alt="Save the Date" class="savename-overlay">
+        </section>
 
         <!-- PHẦN 2: THÔNG TIN GIA ĐÌNH -->
         <div class="section">
@@ -673,6 +810,7 @@ body { align-items:flex-start; }
 
         <!-- PHẦN 3: LỄ THÀNH HÔN & KHUNG VÒM ARCH HỒNG -->
         <div class="section invitation-header">
+            <div class="event-date-background">
             <div class="invitation-title">TRÂN TRỌNG KÍNH MỜI</div>
             <div class="font-script guest-title">Quý Khách</div>
             <div class="font-sans" style="font-size: 12px; font-weight: 600; line-height: 1.6;">
@@ -709,6 +847,7 @@ body { align-items:flex-start; }
                 </div>
                 <div class="lunar-date reveal reveal-up" style="--reveal-delay: .12s">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
             </div>
+            </div>
 
             <!-- ARCH HỒNG CONTAINER -->
             <div class="arch-container reveal reveal-up">
@@ -723,8 +862,8 @@ body { align-items:flex-start; }
             </div>
         </div>
 
-        <!-- PHẦN 4: TIMELINE & LỊCH THÁNG 11 -->
-        <div class="section">
+        <!-- PHẦN 4: GIỜ ĐÓN KHÁCH / KHAI TIỆC -->
+        <div class="section timeline-only-section">
             <div class="timeline-box reveal reveal-up">
                 <div class="timeline-item">
                     <svg class="timeline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h6"/></svg>
@@ -741,21 +880,26 @@ body { align-items:flex-start; }
                     </div>
                 </div>
             </div>
+        </div>
 
-            <h2 class="font-script" style="font-size: 36px; margin: 20px 0;">Save The Date</h2>
+        <!-- NỀN NENLICH: full chiều rộng page; lịch nằm đúng trên đám mây hồng phía dưới -->
+        <div class="nenlich-section">
+            <img class="nenlich-background" src="images/nenlich.png" alt="Nền lịch">
 
-            <!-- BỘ LỊCH THÁNG 11/2026 -->
-            <div class="calendar-card reveal reveal-up">
-                <div class="calendar-header">11.2026</div>
-                <div class="calendar-grid font-sans">
-                    <div class="day-head">T2</div><div class="day-head">T3</div><div class="day-head">T4</div><div class="day-head">T5</div><div class="day-head">T6</div><div class="day-head">T7</div><div class="day-head">CN</div>
-                    
-                    <div></div><div></div><div></div><div></div><div></div><div></div><div class="day-number">1</div>
-                    <div class="day-number">2</div><div class="day-number">3</div><div class="day-number">4</div><div class="day-number">5</div><div class="day-number">6</div><div class="day-number">7</div><div class="day-number">8</div>
-                    <div class="day-number">9</div><div class="day-number">10</div><div class="day-number">11</div><div class="day-number">12</div><div class="day-number">13</div><div class="day-number">14</div><div class="day-number">15</div>
-                    <div class="day-number">16</div><div class="day-number">17</div><div class="day-number">18</div><div class="day-number">19</div><div class="day-number">20</div><div class="day-number">21</div><div class="day-number">22</div>
-                    <div class="day-number">23</div><div class="day-number">24</div><div class="day-number">25</div><div class="day-number">26</div><div class="day-number">27</div><div class="day-number">28</div><div class="day-number active">29</div>
-                    <div class="day-number">30</div>
+            <div class="nenlich-calendar-area">
+                <h2 class="font-script nenlich-save-date">Save The Date</h2>
+
+                <div class="calendar-card nenlich-calendar reveal reveal-up">
+                    <div class="calendar-header">11.2026</div>
+                    <div class="calendar-grid font-sans">
+                        <div class="day-head">T2</div><div class="day-head">T3</div><div class="day-head">T4</div><div class="day-head">T5</div><div class="day-head">T6</div><div class="day-head">T7</div><div class="day-head">CN</div>
+                        <div></div><div></div><div></div><div></div><div></div><div></div><div class="day-number">1</div>
+                        <div class="day-number">2</div><div class="day-number">3</div><div class="day-number">4</div><div class="day-number">5</div><div class="day-number">6</div><div class="day-number">7</div><div class="day-number">8</div>
+                        <div class="day-number">9</div><div class="day-number">10</div><div class="day-number">11</div><div class="day-number">12</div><div class="day-number">13</div><div class="day-number">14</div><div class="day-number">15</div>
+                        <div class="day-number">16</div><div class="day-number">17</div><div class="day-number">18</div><div class="day-number">19</div><div class="day-number">20</div><div class="day-number">21</div><div class="day-number">22</div>
+                        <div class="day-number">23</div><div class="day-number">24</div><div class="day-number">25</div><div class="day-number">26</div><div class="day-number">27</div><div class="day-number">28</div><div class="day-number active">29</div>
+                        <div class="day-number">30</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -763,22 +907,20 @@ body { align-items:flex-start; }
         <!-- PHẦN 5: ALBUM ÁNH CƯỚI & FOOTER -->
         <div class="section">
             <div class="album-header reveal reveal-up">
-                <span class="font-script album-title">Album ảnh cưới</span>
-                <span class="album-line"></span>
+                <!--<span class="font-script album-title">Album ảnh cưới</span>
+                <span class="album-line"></span>-->
             </div>
 
             <div class="photo-grid reveal reveal-up">
-                <img src="images/album_1.jpg" alt="Album 1">
-                <img src="images/album_2.jpg" alt="Album 2">
-                <img src="images/album_3.jpg" alt="Album 3">
-                <img src="images/album_4.jpg" alt="Album 4">
+                <img src="images/hinhalbum.png" alt="Album 1">
+
             </div>
 
             <div class="thank-you-section">
                 <p class="thank-you-text">
                     SỰ HIỆN DIỆN CỦA QUÝ KHÁCH LÀ NIỀM VINH HẠNH CHO GIA ĐÌNH CHÚNG TÔI
                 </p>
-                <img class="footer-illustration" src="images/couple_icon.png" alt="Couple Illustration">
+                
             </div>
         </div>
 
@@ -824,48 +966,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById('guest-builder-form');
         if (builder) builder.classList.add('is-visible');
         if (form && input) {
-            form.addEventListener('submit', async function (event) {
+            form.addEventListener('submit', function (event) {
                 event.preventDefault();
                 const name = input.value.trim();
                 if (!name) { input.focus(); return; }
-
                 const next = new URLSearchParams(window.location.search);
                 if (!next.has('wedding')) next.set('wedding', 'nhatrai');
                 next.set('guest', name);
-
-                // Tạo URL đầy đủ của thiệp cá nhân hóa.
-                const invitationUrl = new URL(window.location.pathname + '?' + next.toString() + window.location.hash, window.location.origin).href;
-
-                // Sao chép URL trước khi điều hướng vì sau khi reload clipboard có thể bị chặn.
-                let copied = false;
-                try {
-                    if (navigator.clipboard && window.isSecureContext) {
-                        await navigator.clipboard.writeText(invitationUrl);
-                        copied = true;
-                    }
-                } catch (err) {
-                    console.warn('Clipboard API không khả dụng, thử phương án dự phòng.', err);
-                }
-
-                if (!copied) {
-                    try {
-                        const temp = document.createElement('textarea');
-                        temp.value = invitationUrl;
-                        temp.setAttribute('readonly', '');
-                        temp.style.position = 'fixed';
-                        temp.style.opacity = '0';
-                        document.body.appendChild(temp);
-                        temp.select();
-                        copied = document.execCommand('copy');
-                        temp.remove();
-                    } catch (err) {
-                        console.warn('Không thể tự động sao chép URL.', err);
-                    }
-                }
-
-                // Lưu URL tạm để có thể báo trạng thái sau khi trang tải lại.
-                try { sessionStorage.setItem('wedding_invitation_link_copied', copied ? '1' : '0'); } catch (err) {}
-                window.location.href = invitationUrl;
+                window.location.href = window.location.pathname + '?' + next.toString() + window.location.hash;
             });
         }
     }
@@ -896,6 +1004,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.couple-names').forEach(el => { el.textContent = config.names; });
     document.querySelectorAll('.guest-title').forEach(el => { el.textContent = guestName; });
     document.querySelectorAll('.date-strip .day-name').forEach(el => { el.textContent = config.weekday; });
+    document.querySelectorAll('.cover-weekday').forEach(el => { el.textContent = config.weekday; });
+    document.querySelectorAll('.cover-day').forEach(el => { el.textContent = config.date; });
     document.querySelectorAll('.date-strip .big-date').forEach(el => { el.textContent = config.date; });
     document.querySelectorAll('.date-strip .year-box').forEach(el => { el.innerHTML = '20<br>26'; });
     document.querySelectorAll('.lunar-date').forEach(el => { el.textContent = config.lunar; });
@@ -959,5 +1069,468 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
+
+<style>
+/* FIX TRANG BIA: dat doc tren thiep, can giua va dung ti le */
+html {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+body {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+#wedding-cover.wedding-cover {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    width: min(100%, 480px) !important;
+    max-width: 480px !important;
+    height: 100vh !important;
+    height: 100svh !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    overflow: hidden !important;
+}
+#wedding-cover .cover-logo {
+    width: 72% !important;
+    max-width: 420px !important;
+    max-height: none !important;
+    height: auto !important;
+    object-fit: contain !important;
+    flex: 0 0 auto !important;
+}
+.card-wrapper {
+    flex: 0 0 auto !important;
+    margin: 0 auto !important;
+}
+@media (max-width: 480px) {
+    #wedding-cover.wedding-cover {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100svh !important;
+        min-height: 100svh !important;
+    }
+    
+}
+/* FIX: tăng logo trang bìa trên điện thoại */
+@media screen and (max-width: 480px) {
+    #wedding-cover .cover-logo {
+        width: 85% !important;
+        max-width: none !important;
+        max-height: none !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+}
+/* Trang bìa: giữ nguyên vị trí ngày tháng theo thiết lập hiện tại */
+#wedding-cover .cover-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+}
+#wedding-cover .cover-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 3vw, 18px);
+    color: #8c3d46;
+    width: 100%;
+    padding: 0 10px;
+    transform: translateY(-220px); /* GIỮ NGUYÊN -220px theo yêu cầu */
+    animation: dateSlideIn 1.2s ease-out both;
+}
+#wedding-cover .cover-weekday {
+    font: 500 clamp(13px, 3.5vw, 20px) 'Montserrat', sans-serif;
+    white-space: nowrap;
+}
+#wedding-cover .cover-date-divider {
+    width: 1px;
+    height: 36px;
+    background: #a98083;
+    flex: 0 0 1px;
+}
+#wedding-cover .cover-day {
+    font-size: clamp(25px, 7vw, 42px);
+    transform: translateY(-5px);
+    line-height: 1;
+    white-space: nowrap;
+}
+#wedding-cover .cover-year {
+    font: 400 clamp(14px, 3.8vw, 22px) 'Montserrat', sans-serif;
+}
+@keyframes dateSlideIn {
+    from { opacity: 0; transform: translateY(-200px); }
+    to { opacity: 1; transform: translateY(-220px); }
+}
+
+/* Trang 1: nền ảnh cưới và lớp chữ savename.png */
+#wedding-main-page {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 334 / 600;
+    height: auto;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff8f7 url("images/main_wedding.png") center center / 100% 100% no-repeat;
+}
+#wedding-main-page .savename-overlay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transform: translate(-50%, 20px);
+    animation: none;
+    pointer-events: none;
+}
+
+@keyframes savenameSlideIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (min-width: 481px) {
+    #wedding-main-page { width: min(100%, 480px); }
+}
+@media (max-width: 480px) {
+    #wedding-cover .cover-content {
+    gap: 16px;
+    }
+
+    #wedding-main-page {
+        width: 100%;
+        aspect-ratio: 334 / 600;
+    }
+
+    #wedding-main-page .savename-overlay {
+        top: 0;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        object-fit: fill;
+        transform: translateY(8px);
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #wedding-main-page .savename-overlay {
+        animation: none;
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+
+#wedding-main-page .savename-overlay {
+  opacity: 0;
+  transform: translate(-50%, 24px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+#wedding-main-page.show-savename .savename-overlay {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+
+
+/* FIX: giữ nguyên khung nenngay; căn toàn bộ nội dung chữ vào giữa khung */
+.section.invitation-header { padding-top: 0 !important; }
+.event-date-background {
+    min-height: 850px;
+    padding: 28px 18px 36px !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.event-date-background .guest-title { margin: 4px 0 6px !important; }
+.event-date-background .invitation-title { margin: 0 0 2px !important; line-height: 1.2 !important; }
+.event-date-background .event-type { margin: 12px 0 3px !important; line-height: 1.2 !important; }
+.event-date-background .event-time-box { margin: 8px 0 !important; gap: 14px !important; }
+.event-date-background .event-time-box .time-center { font-size: 42px !important; }
+.event-date-background .event-time-box .time-left,
+.event-date-background .event-time-box .time-right { line-height: 1.25 !important; }
+.event-date-background .lunar-date { margin: 5px 0 10px !important; line-height: 1.25 !important; }
+.event-date-background .location-title { margin-top: 8px !important; line-height: 1.2 !important; }
+.event-date-background > div[style*="font-size: 18px"] { margin-top: 6px !important; line-height: 1.25 !important; }
+.event-date-background > div[style*="margin-top: 30px"] { margin-top: 12px !important; }
+.event-date-background > div[style*="margin-top: 30px"] .event-type { margin-top: 8px !important; }
+.event-date-background > div[style*="margin-top: 30px"] .event-time-box { margin: 6px 0 !important; }
+@media (max-width: 480px) {
+    .event-date-background { min-height: 790px; padding: 24px 14px 30px !important; }
+    .event-date-background .event-type { letter-spacing: 1px !important; font-size: 18px !important; }
+    .event-date-background .event-time-box { gap: 10px !important; }
+    .event-date-background .event-time-box .time-center { font-size: 38px !important; }
+}
+
+
+/* ===== NENLICH: full width, giữ nguyên khối giờ đón khách ===== */
+.timeline-only-section {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 58px 0 62px !important;
+    box-sizing: border-box !important;
+    background: #fff8f5 url("images/nenchung.png") center center / 100% 100% no-repeat !important;
+    overflow: hidden !important;
+}
+
+.timeline-only-section .timeline-box {
+    width: 72% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.timeline-only-section .timeline-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex: 0 0 auto !important;
+}
+
+.timeline-only-section .timeline-icon {
+    width: 52px !important;
+    height: 52px !important;
+    flex: 0 0 52px !important;
+}
+
+.timeline-only-section .timeline-item > div {
+    white-space: nowrap !important;
+}
+
+/* Nền lịch phải full đúng bề rộng page, không bị co theo padding của .section */
+.nenlich-section {
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    overflow: hidden !important;
+    background: transparent !important;
+}
+
+.nenlich-background {
+    display: block !important;
+    width: 140% !important;
+    height: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    margin-left: -20% !important;
+    object-fit: fill !important;
+}
+
+/* Toàn bộ lịch nằm trong đúng vùng mây hồng ở nửa dưới của nenlich.png */
+.nenlich-calendar-area {
+    position: absolute !important;
+    left: 10% !important;
+    right: 10% !important;
+    top: 75% !important;
+    width: 80% !important;
+    height: 33% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    line-height: normal !important;
+    overflow: hidden !important;
+}
+
+.nenlich-save-date {
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    color: #fff !important;
+    font-size: clamp(25px, 5vw, 36px) !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    text-shadow: 0 1px 2px rgba(130,70,80,.18);
+}
+
+.nenlich-calendar {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-sizing: border-box !important;
+}
+
+.nenlich-calendar .calendar-header {
+    padding: 0 0 8px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+    font-size: clamp(15px, 3.2vw, 22px) !important;
+    line-height: 1.1 !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+}
+
+.nenlich-calendar .calendar-grid {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 7px 3px !important;
+    font-size: clamp(10px, 2.15vw, 14px) !important;
+    line-height: 1.1 !important;
+    color: #fff !important;
+}
+
+.nenlich-calendar .calendar-grid .day-head,
+.nenlich-calendar .calendar-grid .day-number {
+    color: #fff !important;
+    text-align: center !important;
+    text-shadow: 0 1px 2px rgba(100,50,60,.16);
+}
+
+.nenlich-calendar .calendar-grid .day-head {
+    font-weight: 700 !important;
+}
+
+.nenlich-calendar .calendar-grid .day-number {
+    min-height: 17px !important;
+    padding: 1px 0 !important;
+}
+
+.nenlich-calendar .calendar-grid .day-number.active::before {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+@media (max-width: 480px) {
+    .timeline-only-section {
+        padding: 48px 0 52px !important;
+    }
+
+    .timeline-only-section .timeline-box {
+        width: 76% !important;
+        gap: 8px !important;
+    }
+
+    .timeline-only-section .timeline-item {
+        gap: 8px !important;
+    }
+
+    .timeline-only-section .timeline-icon {
+        width: 42px !important;
+        height: 42px !important;
+        flex-basis: 42px !important;
+    }
+
+    .timeline-only-section .timeline-item > div > div:first-child {
+        font-size: 15px !important;
+    }
+
+    .timeline-only-section .timeline-item > div > div:last-child {
+        font-size: 12px !important;
+    }
+
+    .nenlich-calendar-area {
+        left: 9% !important;
+        right: 9% !important;
+        width: 82% !important;
+        top: 76% !important;
+        height: 33% !important;
+    }
+
+    .nenlich-save-date {
+        margin-bottom: 9px !important;
+        font-size: clamp(22px, 6vw, 30px) !important;
+    }
+
+    .nenlich-calendar .calendar-header {
+        font-size: 15px !important;
+        padding-bottom: 7px !important;
+    }
+
+    .nenlich-calendar .calendar-grid {
+        gap: 5px 2px !important;
+        font-size: 10px !important;
+    }
+
+    .nenlich-calendar .calendar-grid .day-number {
+        min-height: 15px !important;
+        padding: 1px 0 !important;
+    }
+
+    .nenlich-calendar .calendar-grid .day-number.active::before {
+        width: 27px !important;
+        height: 27px !important;
+    }
+}
+</style>
+
+
+<script>
+const page = document.querySelector('#wedding-main-page');
+
+if (page) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        page.classList.add('show-savename');
+        observer.unobserve(page);
+      }
+    });
+  }, { threshold: 0.35 });
+
+  observer.observe(page);
+}
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const familyInfos = document.querySelectorAll(".family-info");
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    familyInfos.forEach(item => observer.observe(item));
+});
+</script>
 </body>
 </html>
