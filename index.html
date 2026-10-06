@@ -567,8 +567,8 @@ body { align-items:flex-start; }
         }
 
         .thank-you-section {
-            border-top: 1px solid #eee;
-            margin-top: 10px;
+            
+            margin-top: -50px;
             padding-top: 5px;
         }
 
@@ -726,6 +726,27 @@ body { align-items:flex-start; }
     }
 }
 
+
+/* ================================
+   BƯỚM BAY VÀO HOA Ở 1ST PAGE
+   ================================ */
+
+.cover-butterfly {
+    position: absolute;
+    left: 35%;
+    top: 65%;
+    width: 72px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.cover-butterfly img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
 </style>
 
 <style>
@@ -765,6 +786,11 @@ body { align-items:flex-start; }
     <div class="cover-content">
       <img src="images/logo.png" alt="Logo Hoàng Minh và Thùy Dương" class="cover-logo">
       <div class="cover-date font-serif"><span class="cover-weekday">Chủ nhật</span><span class="cover-date-divider"></span><strong class="cover-day">29.11</strong><span class="cover-date-divider"></span><span class="cover-year">20<br>26</span></div>
+    
+    <div class="cover-butterfly" aria-hidden="true">
+    <img src="images/buom.gif" alt="">
+    </div>
+
     </div>
 </section>
 
@@ -920,7 +946,9 @@ body { align-items:flex-start; }
                 <p class="thank-you-text">
                     SỰ HIỆN DIỆN CỦA QUÝ KHÁCH LÀ NIỀM VINH HẠNH CHO GIA ĐÌNH CHÚNG TÔI
                 </p>
-                
+                <p class="footer-illustration">
+                    
+                </p>
             </div>
         </div>
 
