@@ -853,8 +853,9 @@ body { align-items:flex-start; }
                 <div class="divider"></div>
                 <div class="time-right">Tháng 11<br>Năm 2026</div>
             </div>
-            <div class="lunar-date reveal reveal-up" style="--reveal-delay: .12s">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
+            
 
+            <div class="lunar-date">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
             <div class="location-title">Địa chỉ</div>
             <div style="font-size: 18px; font-weight: 700; margin-top: 10px;">TƯ GIA NHÀ TRAI</div>
             <div style="font-size: 13px; color: #555;">Thành Phố Đồng Nai</div>
@@ -871,8 +872,9 @@ body { align-items:flex-start; }
                     <div class="divider"></div>
                     <div class="time-right">Tháng 11<br>Năm 2026</div>
                 </div>
-                <div class="lunar-date reveal reveal-up" style="--reveal-delay: .12s">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
+                
             </div>
+                <div class="lunar-date">(Nhằm Ngày 21 Tháng 10 Năm Bính Ngọ)</div>
             </div>
 
             <!-- ARCH HỒNG CONTAINER -->
@@ -988,7 +990,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // URLSearchParams tự giải mã dấu + thành khoảng trắng, ví dụ guest=Anh+A -> Anh A.
     const guestParam = (params.get('guest') || '').trim();
     const isGuestBuilder = guestParam.toLowerCase() === 'change';
-    const guestName = (!guestParam || isGuestBuilder) ? 'Quý khách' : guestParam;
+    const isEnglish = (params.get('lang') || '').toLowerCase() === 'en';
+    const guestName = (!guestParam || isGuestBuilder) ? (isEnglish ? 'Dear Guest' : 'Quý khách') : guestParam;
 
     // Chỉ hiện ô nhập tên khi URL có guest=change. Khi gửi form, giữ wedding và thay guest bằng tên đã nhập.
     if (isGuestBuilder) {
@@ -1028,6 +1031,41 @@ document.addEventListener("DOMContentLoaded", function () {
         timeline: [{ time: '11h00', label: 'Đón khách' }, { time: '12h00', label: 'Khai Tiệc' }]
     };
 
+    // Translate dynamically generated invitation details as well as static page text.
+    if (isEnglish) {
+        const weekdayEN = isBrideSide ? 'Saturday' : 'Sunday';
+        config.weekday = weekdayEN;
+        config.month = 'November';
+        config.year = '2026';
+        config.title = isBrideSide ? 'BRIDE’S WEDDING CEREMONY' : 'WEDDING CEREMONY';
+        config.partyTitle = 'WEDDING RECEPTION';
+        config.venueFloor = isBrideSide ? '- 1ST FLOOR -' : '- 2ND FLOOR -';
+        config.home = isBrideSide ? "BRIDE’S FAMILY HOME" : "GROOM’S FAMILY HOME";
+
+        // Use English weekday labels and 12-hour time format throughout the invitation.
+        const toEnglishTime = (time) => {
+            const match = String(time).match(/^(\d{1,2})h(\d{2})$/i);
+            if (!match) return time;
+            let hour = Number(match[1]);
+            const minute = match[2];
+            const suffix = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12 || 12;
+            return `${hour}:${minute} ${suffix}`;
+        };
+        config.times = config.times.map(item => ({
+            ...item,
+            time: toEnglishTime(item.time),
+            label: weekdayEN
+        }));
+        config.timeline = isBrideSide
+            ? [{ time: '17h00', label: 'Guest arrival' }, { time: '18h00', label: 'Reception begins' }]
+            : [{ time: '11h00', label: 'Guest arrival' }, { time: '12h00', label: 'Reception begins' }];
+        config.timeline = config.timeline.map(item => ({
+            ...item,
+            time: toEnglishTime(item.time)
+        }));
+    }
+
     function setText(selector, value) {
         document.querySelectorAll(selector).forEach(el => { el.textContent = value; });
     }
@@ -1039,7 +1077,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.cover-day').forEach(el => { el.textContent = config.date; });
     document.querySelectorAll('.date-strip .big-date').forEach(el => { el.textContent = config.date; });
     document.querySelectorAll('.date-strip .year-box').forEach(el => { el.innerHTML = '20<br>26'; });
-    document.querySelectorAll('.lunar-date').forEach(el => { el.textContent = config.lunar; });
+    document.querySelectorAll('.lunar-date').forEach(el => {
+        el.textContent = config.lunar;
+        // Keep lunar dates in Vietnamese; hide them only in English mode.
+        el.style.display = isEnglish ? 'none' : '';
+    });
 
     document.querySelectorAll('.event-time-box .time-left').forEach((el, index) => {
         const item = config.times[index];
@@ -1717,6 +1759,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
     audio.addEventListener('play', () => updateButton(true));
     audio.addEventListener('pause', () => updateButton(false));
+})();
+</script>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  if ((params.get('lang') || '').toLowerCase() !== 'en') return;
+  document.documentElement.lang = 'en';
+  const translations = {
+    'Thiệp Cưới - Hoàng Minh & Thùy Dương': 'Wedding Invitation - Hoang Minh & Thuy Duong',
+    'Tạo thiệp mời riêng': 'Create a personalized invitation',
+    'Tạo thiệp': 'Create invitation',
+    'Nhập tên khách rồi nhấn “Tạo thiệp”. Trang sẽ tải lại với tên khách đã điền sẵn.': 'Enter the guest’s name and click “Create invitation”. The page will reload with the guest’s name filled in.',
+    'Trang bìa mở đầu: cuộn xuống để xem nội dung thiệp': 'Cover page: scroll down to view the invitation',
+    'Chủ nhật': 'Sunday', 'Chủ Nhật': 'Sunday', 'Tháng 11': 'November', 'Năm 2026': '2026',
+    'HOA VĂN HOẠ TIẾT': 'DECORATIVE PATTERN', 'PHẦN 1: HEADER': 'SECTION 1: HEADER',
+    'PHẦN 2: THÔNG TIN GIA ĐÌNH': 'SECTION 2: FAMILY INFORMATION',
+    'Hôn nhân là chuyện cả đời': 'Marriage is a lifelong journey',
+    'Yêu người vừa ý, cưới người mình thương': 'Love the one you choose, marry the one you love',
+    'CHÚ RỂ': 'GROOM', 'NHÀ TRAI': 'GROOM’S FAMILY', 'ÔNG: THIỀU SỸ DŨNG': 'MR. THIEU SY DUNG',
+    'BÀ: LÊ THỊ BÌNH': 'MRS. LE THI BINH', 'Chú rể': 'Groom', 'CÔ DÂU': 'BRIDE',
+    'NHÀ GÁI': 'BRIDE’S FAMILY', 'ÔNG: ĐOÀN ĐÌNH SÂM': 'MR. DOAN DINH SAM',
+    'BÀ: THÁI THỊ HỢI': 'MRS. THAI THI HOI', 'Cô dâu': 'Bride',
+    'PHẦN 3: LỄ THÀNH HÔN & KHUNG VÒM ARCH HỒNG': 'SECTION 3: WEDDING CEREMONY & PINK ARCH',
+    'TRÂN TRỌNG KÍNH MỜI': 'CORDIALLY INVITE', 'Quý Khách': 'You',
+    'TỚI DỰ BỮA TIỆC THÂN MẬT': 'TO JOIN US FOR A CELEBRATION',
+    'CHUNG VUI CÙNG GIA ĐÌNH CHÚNG TÔI': 'AND SHARE THIS JOYFUL OCCASION WITH OUR FAMILY',
+    'LỄ THÀNH HÔN': 'WEDDING CEREMONY', 'ĐƯỢC TỔ CHỨC VÀO LÚC': 'WILL TAKE PLACE AT',
+    'Địa chỉ': 'Address', 'TƯ GIA NHÀ TRAI': 'GROOM’S FAMILY HOME', 'Thành Phố Đồng Nai': 'Dong Nai City',
+    'TIỆC MỪNG & KHUNG VÒM (CÁT TƯỜNG GARDEN)': 'WEDDING RECEPTION & ARCH (CAT TUONG GARDEN)',
+    'TIỆC MỪNG LỄ THÀNH HÔN': 'WEDDING RECEPTION', 'ARCH HỒNG CONTAINER': 'PINK CONTAINER ARCH',
+    'Địa điểm tổ chức': 'Venue', 'Địa chỉ': 'Address', 'NHÀ HÀNG TIỆC CƯỚI': 'WEDDING RESTAURANT', 'CÁT TƯỜNG GARDEN': 'CAT TUONG GARDEN',
+    '- SẢNH LẦU 1 -': '- 1ST FLOOR BANQUET HALL -', '- SẢNH LẦU 2 -': '- 2ND FLOOR BANQUET HALL -', '715 Phạm Văn Thuận, Tam Hiệp, Đồng Nai': '715 Pham Van Thuan, Tam Hiep, Dong Nai',
+    'XEM CHỈ ĐƯỜNG': 'GET DIRECTIONS', 'PHẦN 4: GIỜ ĐÓN KHÁCH / KHAI TIỆC': 'SECTION 4: GUEST ARRIVAL / RECEPTION',
+    'Đón khách': 'Guest arrival', 'Khai tiệc': 'Reception begins', 'Khai Tiệc': 'Reception begins', 'TƯ GIA NHÀ GÁI': 'BRIDE’S FAMILY HOME', 'TƯ GIA NHÀ TRAI': 'GROOM’S FAMILY HOME', 'LỄ VU QUY': 'BRIDE’S WEDDING CEREMONY', 'TIỆC MỪNG LỄ VU QUY': 'WEDDING RECEPTION',
+    'NỀN NENLICH: full chiều rộng page; lịch nằm đúng trên đám mây hồng phía dưới': 'NENLICH BACKGROUND: full page width; calendar aligned over the pink cloud below',
+    'PHẦN 5: ALBUM ÁNH CƯỚI & FOOTER': 'SECTION 5: WEDDING PHOTO ALBUM & FOOTER',
+    'Album ảnh cưới': 'Wedding Photo Album',
+    'SỰ HIỆN DIỆN CỦA QUÝ KHÁCH LÀ NIỀM VINH HẠNH CHO GIA ĐÌNH CHÚNG TÔI': 'YOUR PRESENCE IS AN HONOR TO OUR FAMILY',
+    'NHẠC NỀN THIỆP CƯỚI: đặt file music.mp3 trong thư mục images': 'WEDDING INVITATION MUSIC: place music.mp3 in the images folder',
+    '♫ Bật nhạc': '♫ Play music', '♫ Tắt nhạc': '♫ Pause music'
+  };
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const original = node.nodeValue;
+    const key = original.trim();
+    if (Object.prototype.hasOwnProperty.call(translations, key)) {
+      node.nodeValue = original.replace(key, translations[key]);
+    }
+  });
+  if (translations[document.title]) document.title = translations[document.title];
 })();
 </script>
 
