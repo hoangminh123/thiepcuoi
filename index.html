@@ -1601,7 +1601,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <!-- NHẠC NỀN THIỆP CƯỚI: đặt file music.mp3 trong thư mục images -->
-<audio id="wedding-background-music" src="images/music.mp3" loop preload="auto"></audio>
+<audio id="wedding-background-music" src="images/music.mp3" autoplay loop preload="auto"></audio>
 <button id="wedding-music-toggle" type="button" aria-label="Bật nhạc" aria-pressed="false">♫ Bật nhạc</button>
 <style>
 #wedding-music-toggle {
@@ -1625,10 +1625,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById('wedding-music-toggle');
     if (!audio || !button) return;
 
+    // Chỉ khóa phát tự động sau khi người dùng chủ động bấm Tắt nhạc.
     let userTurnedMusicOff = false;
-    
-    // Bổ sung 'scroll' vào danh sách sự kiện để bắt trúng hành động lướt màn hình trên điện thoại
-    const gestureTypes = ['pointerdown', 'touchstart', 'touchend', 'touchmove', 'click', 'keydown', 'wheel', 'scroll'];
+    // Dừng nhạc khi thiệp bị ẩn; chỉ phát lại khi người xem quay lại
+    // nếu nhạc đang chạy trước đó và người dùng chưa chủ động tắt.
+    let wasPlayingBeforeHidden = false;
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            wasPlayingBeforeHidden = !audio.paused;
+            audio.pause();
+        } else if (wasPlayingBeforeHidden && !userTurnedMusicOff) {
+            wasPlayingBeforeHidden = false;
+            const promise = audio.play();
+            if (promise && typeof promise.then === 'function') {
+                promise.then(() => updateButton(true)).catch(() => updateButton(false));
+            }
+        }
+    });
+    // Hỗ trợ thêm trường hợp người dùng rời trang/đóng tab.
+    window.addEventListener('pagehide', () => {
+        wasPlayingBeforeHidden = false;
+        audio.pause();
+    });
 
     const updateButton = (playing) => {
         button.textContent = playing ? '♫ Tắt nhạc' : '♫ Bật nhạc';
@@ -1636,62 +1654,64 @@ document.addEventListener("DOMContentLoaded", () => {
         button.setAttribute('aria-pressed', String(playing));
     };
 
-    const removeGestureListeners = () => {
-        gestureTypes.forEach(type => {
-            // Đối với 'scroll', ta lắng nghe trên window, các sự kiện khác trên document
-            if (type === 'scroll') {
-                window.removeEventListener('scroll', gesture, { capture: true });
-            } else {
-                document.removeEventListener(type, gesture, { capture: true });
-            }
-        });
-    };
-
     const attemptPlayFromGesture = () => {
         if (userTurnedMusicOff || !audio.paused) return;
-        
-        audio.play()
-            .then(() => {
-                updateButton(true);
-                removeGestureListeners(); // Phát thành công -> gỡ toàn bộ sự kiện ngay lập tức
-            })
-            .catch((err) => {
-                console.log("Trình duyệt vẫn đang chặn:", err);
-                updateButton(false);
-            });
+        try {
+            const promise = audio.play();
+            if (promise && typeof promise.then === 'function') {
+                promise.then(() => updateButton(true)).catch(() => updateButton(false));
+            }
+        } catch (_) {
+            updateButton(false);
+        }
     };
+
+    // Thử tự phát ngay khi mở trang. Trình duyệt có thể chặn; khi đó
+    // sẽ thử lại ở lần tương tác đầu tiên của người xem.
+    const attemptAutoplay = () => {
+        if (userTurnedMusicOff || !audio.paused) return;
+        try {
+            const promise = audio.play();
+            if (promise && typeof promise.then === 'function') {
+                promise.then(() => updateButton(true)).catch(() => updateButton(false));
+            }
+        } catch (_) {
+            updateButton(false);
+        }
+    };
+
+    // Tự thử phát khi script chạy và khi trang tải xong.
+    attemptAutoplay();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attemptAutoplay, { once: true });
+    }
 
     const gesture = (event) => {
-        // Tránh can thiệp khi người dùng bấm trực tiếp vào nút điều khiển nhạc
-        if (button.contains(event.target)) return; 
+        if (event.target === button || button.contains(event.target)) return;
         attemptPlayFromGesture();
     };
-
-    // Đăng ký sự kiện
-    gestureTypes.forEach(type => {
-        if (type === 'scroll') {
-            // Sự kiện scroll bắt buộc phải lắng nghe trên window mới hoạt động tốt trên mobile
-            window.addEventListener('scroll', gesture, { capture: true, passive: true });
-        } else {
-            document.addEventListener(type, gesture, { capture: true, passive: true });
-        }
+    ['pointerdown', 'touchstart', 'touchend', 'touchmove', 'click', 'keydown', 'wheel'].forEach(type => {
+        document.addEventListener(type, gesture, { capture: true, passive: true });
     });
 
-    // Xử lý nút bấm thủ công
     button.addEventListener('click', (event) => {
         event.stopPropagation();
         if (!audio.paused) {
+            // Người dùng đã chủ động tắt: các thao tác chạm/vuốt sẽ không bật lại.
             userTurnedMusicOff = true;
             audio.pause();
             updateButton(false);
         } else {
+            // Chỉ nút Bật nhạc mới mở lại sau khi đã chủ động tắt.
             userTurnedMusicOff = false;
-            audio.play()
-                .then(() => {
-                    updateButton(true);
-                    removeGestureListeners();
-                })
-                .catch(() => updateButton(false));
+            try {
+                const promise = audio.play();
+                if (promise && typeof promise.then === 'function') {
+                    promise.then(() => updateButton(true)).catch(() => updateButton(false));
+                }
+            } catch (_) {
+                updateButton(false);
+            }
         }
     });
 
@@ -1699,8 +1719,6 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.addEventListener('pause', () => updateButton(false));
 })();
 </script>
-
-
 
 </body>
 </html>
